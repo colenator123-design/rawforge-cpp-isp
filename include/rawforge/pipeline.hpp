@@ -5,9 +5,12 @@
 namespace rawforge {
 
 struct DenoiseParameters {
-    int radius = 3;
-    float spatial_sigma = 2.5F;
-    float range_sigma = 0.12F;
+    int radius = 4;
+    float spatial_sigma = 3.5F;
+    float read_noise_sigma = 0.035F;
+    float shot_noise_scale = 0.025F;
+    float range_multiplier = 1.5F;
+    unsigned int threads = 0;
 };
 
 [[nodiscard]] Image<float> same_color_bilateral(

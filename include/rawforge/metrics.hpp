@@ -6,6 +6,6 @@ namespace rawforge {
 
 [[nodiscard]] double mse(const Image<float>& reference, const Image<float>& prediction);
 [[nodiscard]] double psnr(const Image<float>& reference, const Image<float>& prediction);
+[[nodiscard]] double ssim(const Image<float>& reference, const Image<float>& prediction);
 
 }  // namespace rawforge
-

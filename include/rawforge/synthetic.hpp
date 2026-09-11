@@ -6,7 +6,11 @@
 
 namespace rawforge {
 
-[[nodiscard]] Image<float> create_test_scene(std::size_t width, std::size_t height);
+[[nodiscard]] Image<float> create_test_scene(
+    std::size_t width,
+    std::size_t height,
+    std::uint32_t variant = 0
+);
 [[nodiscard]] Image<float> mosaic_quad_rggb(const Image<float>& rgb);
 [[nodiscard]] Image<float> mosaic_bayer_rggb(const Image<float>& rgb);
 [[nodiscard]] Image<float> add_sensor_noise(
@@ -17,4 +21,3 @@ namespace rawforge {
 );
 
 }  // namespace rawforge
-

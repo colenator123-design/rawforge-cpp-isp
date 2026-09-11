@@ -31,19 +31,26 @@ Image<float> mosaic(const Image<float>& rgb, const bool quad) {
 
 }  // namespace
 
-Image<float> create_test_scene(const std::size_t width, const std::size_t height) {
+Image<float> create_test_scene(
+    const std::size_t width,
+    const std::size_t height,
+    const std::uint32_t variant
+) {
     Image<float> image(width, height, 3);
     const float scale = static_cast<float>(std::min(width, height));
+    const float variant_phase = static_cast<float>(variant) * 0.37F;
     for (std::size_t y = 0; y < height; ++y) {
         for (std::size_t x = 0; x < width; ++x) {
             const float fx = static_cast<float>(x) / static_cast<float>(width - 1U);
             const float fy = static_cast<float>(y) / static_cast<float>(height - 1U);
-            float red = 0.08F + 0.72F * fx;
-            float green = 0.08F + 0.65F * fy;
-            float blue = 0.12F + 0.45F * (1.0F - fx);
+            float red = 0.08F + 0.62F * fx + 0.08F * std::sin(6.0F * fy + variant_phase);
+            float green = 0.08F + 0.58F * fy + 0.07F * std::cos(5.0F * fx + variant_phase);
+            float blue = 0.12F + 0.40F * (1.0F - fx) + 0.06F * std::sin(4.0F * fy);
 
-            const float dx = static_cast<float>(x) - 0.72F * static_cast<float>(width);
-            const float dy = static_cast<float>(y) - 0.30F * static_cast<float>(height);
+            const float circle_x = 0.62F + 0.05F * static_cast<float>(variant % 3U);
+            const float circle_y = 0.24F + 0.06F * static_cast<float>((variant / 2U) % 3U);
+            const float dx = static_cast<float>(x) - circle_x * static_cast<float>(width);
+            const float dy = static_cast<float>(y) - circle_y * static_cast<float>(height);
             const float circle = 1.0F - smooth_step(0.18F * scale, 0.19F * scale, std::hypot(dx, dy));
             red = red * (1.0F - circle) + 0.95F * circle;
             green = green * (1.0F - circle) + 0.18F * circle;
@@ -51,15 +58,18 @@ Image<float> create_test_scene(const std::size_t width, const std::size_t height
 
             if (x > width / 12U && x < width * 5U / 12U && y > height / 5U &&
                 y < height * 4U / 5U) {
-                const bool checker = ((x / 10U) + (y / 10U)) % 2U == 0U;
+                const std::size_t cell = 6U + 2U * (variant % 4U);
+                const bool checker = ((x / cell) + (y / cell)) % 2U == 0U;
                 const float detail = checker ? 0.82F : 0.18F;
                 red = 0.25F + 0.65F * detail;
                 green = 0.15F + 0.55F * (1.0F - detail);
                 blue = 0.20F + 0.60F * detail;
             }
 
+            const std::size_t line_period = 2U + variant % 4U;
             const bool fine_lines = x > width / 2U && y > height * 3U / 5U &&
-                                    ((x / 3U) % 2U == 0U || (y / 3U) % 2U == 0U);
+                                    (((x + variant * y) / line_period) % 2U == 0U ||
+                                     (y / line_period) % 2U == 0U);
             if (fine_lines) {
                 red = 0.92F;
                 green = 0.92F;
@@ -95,4 +105,3 @@ Image<float> add_sensor_noise(
 }
 
 }  // namespace rawforge
-

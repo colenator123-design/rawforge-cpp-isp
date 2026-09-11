@@ -1,0 +1,4 @@
+profile,scenes,baseline_psnr_db,restored_psnr_db,psnr_gain_db,baseline_ssim,restored_ssim,ssim_gain
+low,8,19.98528,20.06282,0.07754,0.85117,0.85656,0.00539
+medium,8,19.56294,19.94234,0.37940,0.82441,0.84894,0.02453
+high,8,18.80905,19.56701,0.75796,0.78124,0.82610,0.04487

@@ -57,6 +57,14 @@ void test_deterministic_noise() {
     expect(rawforge::mse(first, second) == 0.0, "Fixed seed produces identical sensor noise");
 }
 
+void test_identical_images_have_perfect_metrics() {
+    const auto image = rawforge::mosaic_quad_rggb(rawforge::create_test_scene(32, 24));
+    expect(rawforge::mse(image, image) == 0.0, "Identical images have zero MSE");
+    expect(std::isinf(rawforge::psnr(image, image)), "Identical images have infinite PSNR");
+    expect(std::abs(rawforge::ssim(image, image) - 1.0) < 1.0e-9,
+           "Identical images have SSIM one");
+}
+
 }  // namespace
 
 int main() {
@@ -65,6 +73,7 @@ int main() {
         test_constant_is_preserved();
         test_denoising_improves_synthetic_psnr();
         test_deterministic_noise();
+        test_identical_images_have_perfect_metrics();
     } catch (const std::exception& error) {
         std::cerr << "Unexpected exception: " << error.what() << '\n';
         return EXIT_FAILURE;
@@ -76,4 +85,3 @@ int main() {
     std::cout << "All RawForge tests passed\n";
     return EXIT_SUCCESS;
 }
-
